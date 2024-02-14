@@ -71,7 +71,7 @@ arch-chroot /mnt umount "$DISK"4
 
 #Test if all the programs were installed
 cp Test_what_was_installed /mnt
-#Run arch-chroot /mnt ./Test_what_was_installed 2>&1 | tee /tmp/installed_programs
+#Run arch-chroot /mnt bash -c "./Test_what_was_installed 2>&1 | tee /tmp/installed_programs"
 
 ##Unmounting everything and rebooting...
 #umount -R /mnt
