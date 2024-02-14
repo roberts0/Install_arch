@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #kernel
-pacman -Q $kernel base linux-firmware sof-firmware
+pacman -Q linux-lts base linux-firmware sof-firmware
 
 #man pages
 pacman -Q man-db man-pages texinfo
