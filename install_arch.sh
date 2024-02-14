@@ -1,4 +1,7 @@
 #!/bin/bash
+#Output and error has to be printed on the screen as well as stored in a file /tmp/output after user runs ./install_arch.sh
+exec > >(tee /tmp/paula) 2>&1
+
 #Make sure the directory is right
 working_directory=$(echo ${0%/*})
 cd $working_directory
