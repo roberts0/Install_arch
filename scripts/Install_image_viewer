@@ -1,0 +1,17 @@
+#!/bin/bash
+   
+#Install image viewer
+arch-chroot /mnt <<EOF
+image_viewer=sxiv
+aura -S \$image_viewer --noconfirm
+mkdir -p /home/$User/.config/sxiv/exec
+touch /home/$User/.config/sxiv/exec/key-handler
+chmod 700 /home/$User/.config/sxiv/exec/key-handler
+echo 'alias sxy="sx -t ~/Pictures/Screenshots/*.jpg"' >> $Bashrc
+cat <<'EOT' >> $Bashrc
+function sx {
+nohup sxiv "\$@" > /dev/null 2>&1 & disown
+}
+alias pict="cd ~/Pictures"
+EOT
+EOF

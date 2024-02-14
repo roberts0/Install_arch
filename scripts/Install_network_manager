@@ -1,0 +1,15 @@
+#!/bin/bash
+   
+#Install network manager
+arch-chroot /mnt <<EOF
+network_manager=networkmanager
+aura -S \$network_manager --noconfirm
+systemctl enable NetworkManager
+echo 'alias il="nmcli device wifi list"' >> $Bashrc
+cat <<'EOT' >> $Bashrc
+function inte {
+  nmcli --ask device wifi connect \$1
+}
+alias pi="ping -c 10 gnu.org"
+EOT
+EOF

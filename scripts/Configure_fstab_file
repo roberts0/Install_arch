@@ -1,0 +1,25 @@
+#!/bin/bash
+   
+#Configure fstab file
+#genfstab -U /mnt >> /mnt/etc/fstab #will not be used here. Why? Because for some reason, it does not detect /dev/sda4 and not mount it to /mnt/home
+#Manually creating is reliable, genfstab is not
+if [ $firmware = "bios" ]; then
+  ext4_or_fat=ext4
+  fouth_column=rw,relatime
+else
+  ext4_or_fat=vfat
+  fouth_column=rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro
+fi
+cat <<EOF >> /mnt/etc/fstab
+# $(echo "$DISK")1
+UUID=$(lsblk "$DISK"1 -o uuid | sed -n '2p') /boot $ext4_or_fat $fouth_column 0 2
+
+# $(echo "$DISK")2
+UUID=$(lsblk "$DISK"2 -o uuid | sed -n '2p') none swap defaults 0 0
+
+# $(echo "$DISK")4
+UUID=$(lsblk "$DISK"4 -o uuid | sed -n '2p') /home ext4 rw,relatime 0 2
+
+# $(echo "$DISK")3
+UUID=$(lsblk "$DISK"3 -o uuid | sed -n '2p') / ext4 rw,relatime 0 1
+EOF

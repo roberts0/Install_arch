@@ -1,0 +1,10 @@
+#!/bin/bash
+   
+arch-chroot /mnt <<EOF
+which sudo &> /dev/null
+if [ \$? -ne 0 ]; then
+  pacman -S sudo --noconfirm
+fi
+chmod u+w /etc/sudoers
+sed -i '/%sudo/s/# // ; /%wheel/s/# //; /NOPASSWD/s/^/# /' /etc/sudoers
+EOF

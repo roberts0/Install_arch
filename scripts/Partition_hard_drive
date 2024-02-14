@@ -1,0 +1,111 @@
+#!/bin/bash
+   
+#Partition hard drive
+echo -e "\n\n\n"
+lsblk
+disk=$(lsblk -b | gawk "/$(lsblk -b | gawk '{print $4}' | grep -v '^[^[:digit:]]*$' | gawk '$1 > maxNumber {maxNumber = $1} END{print maxNumber}')/{print \$1}")
+echo ""
+read -p "Is $disk the right hard drive you want to install your operating system on? Type "'"'"yes"'"'" if yes. Otherwise, type "'"'"no"'"'" to enter the name of the right disk: "
+#If yes is entered, exit if statement and continue with the rest of the script
+#If no is entered, ask for the right disk. If he doesn't give the right disk, create an infinite loop to ask for the right disk
+function disk_to_partition {
+yes=(y Y yes Yes yEs yeS YEs YeS yES YES)
+no=(n N no No nO NO)
+for Yes in ${yes[@]}; do
+  if [ "$Yes" != "$REPLY" ]; then
+    continue
+  else
+    Disk=/dev/$disk
+    break
+  fi
+done
+set +e
+for No in ${no[@]}; do
+  if [ "$No" != "$REPLY" ]; then
+    continue
+  else
+    echo "$REPLY"
+    read -p "Enter the name of the disk where you want to install the operating system (DO include /dev in the name): " Disk
+    lsblk "$Disk" > /dev/null
+    while [ $? -ne 0 ] || [ "$Disk" = /dev/sr0 ]; do
+      read -p "Enter the name of the disk where you want to install the operating system (DO include /dev in the name): " Disk
+      lsblk "$Disk" > /dev/null
+    done
+  fi
+done
+}
+set -e
+#If neither yes, nor no is given, create an infinite loop to ask for either yes or no
+disk_to_partition
+while [ "$Disk" = "" ]; do
+  echo "Answer must be yes or no"
+  read -p "Is $disk the right hard drive you want to install your operating system on? Type "'"'"yes"'"'" if yes. Otherwise, type "'"'"no"'"'" to enter the name of the right disk: "
+  disk_to_partition
+done
+ram=$(free -mt | gawk '$1 ~ /Mem:/{print $2}')
+swap_partition=$[ $ram * 2 ]
+size_of_drive=$(lsblk -b "$Disk" -o size | sed -n '2p')
+if [ $size_of_drive -le 20000000000 ]; then
+  echo "Sorry but your drive is too small, it's less than 20GB. While technically it is possible to install Arch Linux on drive as small as this, the script would need to be rewritten. And honestly, I don't want to put effort and hassle to include this fact that someone might actually have a drive smaller than 20GB. Who on this Earth nowdays has a drive as small as this? If you are one of such very, very, extremely rare people, then edit this script yourself. I won't do it for you"
+  exit
+fi
+if [ "$size_of_drive" -ge 100000000000 ]; then
+  boot_partition=1000
+  root_partition=35000
+elif [ "$size_of_drive" -ge 82500000000 ]; then
+  boot_partition=900
+  root_partition=31000
+elif [ "$size_of_drive" -ge 65000000000 ]; then
+  boot_partition=800
+  root_partition=27000
+elif [ "$size_of_drive" -ge 47500000000 ]; then
+  boot_partition=700
+  root_partition=23000
+elif [ "$size_of_drive" -ge 30000000000 ]; then
+  boot_partition=600
+  root_partition=19000
+else
+  boot_partition=500
+  root_partition=15000
+fi
+if [ $firmware = "bios" ]; then
+  parted $Disk mklabel msdos
+  parted $Disk mkpart primary ext4 1 $[ $boot_partition + 1 ]
+  parted $Disk set 1 boot on
+  parted $Disk mkpart primary linux-swap $[ $boot_partition + 1 ] $[ $boot_partition + 1 + $swap_partition ]
+  parted $Disk mkpart primary ext4 $[ $boot_partition + 1 + $swap_partition ] $[ $boot_partition + 1 + $swap_partition + $root_partition ]
+  parted $Disk mkpart primary ext4 $[ $boot_partition + 1 + $SWap + $root_partition ] 100%
+elif [ $firmware = "uefi" ]; then
+  parted $Disk mklabel gpt
+  parted $Disk mkpart EFI_system_partition fat32 1 $[ $boot_partition + 1 ]
+  parted $Disk set 1 esp on
+  parted $Disk mkpart swap_partition linux-swap $[ $boot_partition + 1 ] $[ $boot_partition + 1 + $swap_partition ]
+  parted $Disk mkpart root_partition ext4 $[ $boot_partition + 1 + $swap_partition ] $[ $boot_partition + 1 + $swap_partition + $root_partition ]
+  parted $Disk mkpart home_partition ext4 $[ $boot_partition + 1 + $swap_partition + $root_partition ] 100%
+else
+ echo "The variable firware must be either bios or uefi. There is a bug in this script. Debug it!"
+ exit
+fi
+#For /dev/sda, partitions are simply /dev/sda1 and /dev/sda2. But for /dev/mmcblk1 (and nvme0), the partitions are /dev/mmcblk1p1, the letter p is there between disk name and partition number
+if [[ "$Disk" =~ /dev/sd[a-z] ]]; then
+  DISK="$Disk"
+elif [[ "$Disk" =~ /dev/mmcblk[0-9] ]] || [[ "$Disk" =~ /dev/nvme0 ]]; then
+  DISK="$Disk"p
+else
+  echo "Sorry, but you have a disk name which I have not included in the script. You have to edit this script yourself. Go to the file scripts/Partition_hard_drive to this part -> grep -A 9 '^#For /dev/sda, partitions are simply' and edit this part of the file yourself to include the name of your disk, then rerun the script. Sorry about that :(   I am incompetent"
+  exit
+fi
+mkfs.ext4 -F "$DISK"3
+mkfs.ext4 -F "$DISK"4
+mkswap -f "$DISK"2
+swapon "$DISK"2
+mkdir /mnt/home
+mount "$DISK"4 /mnt/home
+mount "$DISK"3 /mnt
+if [ $firmware = "bios" ]; then
+  mkfs.ext4 -F "$DISK"1
+else
+  mkfs.fat -F 32 "$DISK"1
+fi
+mkdir /mnt/boot
+mount "$DISK"1 /mnt/boot

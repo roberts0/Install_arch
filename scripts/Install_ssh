@@ -1,0 +1,12 @@
+#!/bin/bash
+   
+#Install SSH
+arch-chroot /mnt <<EOF
+aura -S openssh --noconfirm
+cd /home/$User
+git clone https://github.com/ccontavalli/ssh-ident.git
+cd ssh-ident
+cp ssh-ident /usr/bin
+echo 'alias ssh="/usr/bin/ssh-ident"' >> $Bashrc
+echo 'alias scp="scp -S /usr/bin/ssh-ident"' >> $Bashrc
+EOF

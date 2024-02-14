@@ -1,0 +1,6 @@
+#!/bin/bash
+   
+#Configure time
+arch-chroot /mnt <<EOF
+ln -sf /usr/share/zoneinfo/Europe/Riga /etc/localtime
+EOF

@@ -1,0 +1,8 @@
+#!/bin/bash
+   
+#Configure locale
+arch-chroot /mnt <<EOF
+sed -i 's/^#\(lv_LV\)/\1/' /etc/locale.gen
+locale-gen
+echo "LANG=lv-LV.UTF-8" > /etc/locale.conf
+EOF

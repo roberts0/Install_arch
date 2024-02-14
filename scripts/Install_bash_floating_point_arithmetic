@@ -1,0 +1,7 @@
+#!/bin/bash
+   
+#Install software that will allow to perform floating point arithmetic in Bash
+arch-chroot /mnt <<EOF
+bash_floating_point_arithmetic_software=bc
+aura -S \$bash_floating_point_arithmetic_software --noconfirm
+EOF

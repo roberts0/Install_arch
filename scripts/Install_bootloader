@@ -1,0 +1,14 @@
+#!/bin/bash
+   
+#Install bootloader
+arch-chroot /mnt <<EOF
+bootloader=grub
+aura -S \$bootloader --noconfirm
+if [ $firmware = "bios" ]; then
+  grub-install --target=i386-pc $Disk
+else
+  aura -S efibootmgr --noconfirm
+  grub-install --boot-directory=/boot --efi-directory=/boot $Disk
+fi
+grub-mkconfig -o /boot/\$bootloader/\$bootloader.cfg
+EOF

@@ -1,0 +1,6 @@
+#!/bin/bash
+   
+#Install man pages
+arch-chroot /mnt <<EOF
+pacman -S man-db man-pages texinfo --noconfirm
+EOF

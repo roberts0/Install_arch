@@ -1,0 +1,46 @@
+#!/bin/bash
+   
+#Install window manager
+User=roberts
+arch-chroot /mnt <<EOF
+window_manager=ratpoison
+useradd -m nobodyyyy
+echo '%nobodyyyy ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
+su - nobodyyyy -c "sudo aura -A \$window_manager --noconfirm; echo \\\$? > /tmp/was_program_installed.txt"
+userdel -f nobodyyyy
+rm -rf /home/nobodyyyy
+sed -i '/nobodyyyy/d' /etc/sudoers
+Errorr=\$(cat /tmp/was_program_installed.txt)
+if [ \$Errorr -ne 0 ]; then
+  useradd -m nobodyyyy
+  echo '%nobodyyyy ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
+su - nobodyyyy <<HERE
+sudo aura -A \$window_manager --noconfirm &> errors.txt
+public_key=\\\$(grep 'unknown public key' errors.txt | sed 's/^.*\(unknown public key\)/\1/' | gawk '{print \\\$4}' | sed 's/)$//')
+gpg --recv-keys \\\$public_key && sudo aura -A \$window_manager --noconfirm
+which ratpoison
+#if [ \$? -ne 0 ]; then
+#  git clone https://aur.archlinux.org/ratpoison.git
+#  cd ratpoison
+#  makepkg -si --skippgpcheck --noconfirm
+#fi
+HERE
+#fi
+#  sed -i '/nobodyyyy/d' /etc/sudoers
+#  userdel -f nobodyyyy
+#  rm -rf /home/nobodyyyy
+#fi
+#cat <<ZOF > /home/$User/.ratpoisonrc
+## Setting the escape key to the Windows key
+#escape Super_L
+#
+## Make Alt-Tab movement (Super Super still does not work unfortunately)
+#definekey top M-Tab other
+#definekey root z other
+#
+## Make banish happen automatically each time windows are changed
+#addhook switchwin banish
+#ZOF
+##Order X11 to start ratpoison once X11 has been launched
+#echo 'exec /usr/bin/ratpoison' >> /home/$User/.xinitrc
+EOF

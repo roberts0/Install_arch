@@ -1,0 +1,91 @@
+#!/bin/bash
+   
+#Create a non-root user
+User=roberts
+Bashrc=/home/$User/.bashrc
+arch-chroot /mnt bash -c '
+User=roberts
+useradd -m -G wheel $User
+echo -e "\n\n\nInput the $User'"'"'s password"
+setsid passwd roberts
+while [ $? -ne 0 ]; do
+  setsid passwd $User
+done
+chown -R $User:$User /home/$User
+'
+arch-chroot /mnt <<EOF
+echo 'alias sudo="sudo "' >> $Bashrc
+echo 'set -o vi' >> $Bashrc
+sed -i '/PS1/d' /home/$User/.bashrc
+cat <<ZOF >> /home/$User/.bashrc
+function in {
+  sudo aura -S \\\$* --noconfirm
+}
+function In {
+  sudo aura -A \\\$* --noconfirm
+}
+export LC_ALL=C
+function l {
+  if [ -z \\\$1 ]; then
+    ls | nl
+  else
+    ls "\\\$1" | nl
+  fi
+}
+PS1='[\u@\h \W]\[\e[91m\\\\$\e[0m\] '
+alias ltr="l -tr"
+alias cp="cp -i"
+alias mv="mv -i"
+alias la="l -a"
+alias ll="l -lh"
+alias lla="l -lha"
+alias lld="l -ld"
+alias llh="l -lh"
+alias sus="systemctl suspend"
+alias shut="shutdown -h now"
+alias gcc="gcc -Wall"
+alias des="cd ~/Desktop"
+alias dow="cd ~/Downloads"
+alias bin="cd ~/bin"
+alias tmp="cd /tmp"
+alias mnt="cd /mnt"
+alias src=". ~/.bashrc"
+alias brc="vi ~/.bashrc"
+alias C="clear"
+function fii () {
+  find . -iname "*\\\$1*"
+}
+function d () {
+  mkdir \\\$1
+  cd \\\$1
+}
+function grepp {
+  sed "1p;/\\\$1/!d"
+}
+function Kill {
+  for i in \\\$(ps -eo pid,comm | gawk "/\\\$1/{print \\\\\\\$1}"); do kill -9 \\\$i; done
+}
+function eps {
+  ps -eo pid,comm,etime | sed "1p;/\\\$1/!d"
+}
+function sl { #setup LUKS
+sudo cryptsetup luksFormat \\\$1
+sudo cryptsetup open \\\$1 vaultdrive
+sudo mkfs.xfs -f -L myvault /dev/mapper/vaultdrive
+sudo mount /dev/mapper/vaultdrive /mnt
+}
+function ml { #mount LUKS
+  sudo cryptsetup open \\\$1 vaultdrive
+  sudo mount /dev/mapper/vaultdrive /mnt
+  lsblk
+}
+function Ul { #unmount LUKS
+  sudo umount /dev/mapper/vaultdrive
+  sudo cryptsetup close vaultdrive 
+  sudo eject \\\$1
+  sudo udisksctl power-off -b \\\$1
+  echo \\\$?
+  lsblk
+}
+ZOF
+EOF

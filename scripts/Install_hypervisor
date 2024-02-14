@@ -1,0 +1,12 @@
+#!/bin/bash
+   
+#Install hypervisor
+arch-chroot /mnt <<EOF
+hypervisor=virtualbox
+aura -S \$hypervisor --noconfirm
+cat <<'EOT' >> $Bashrc
+function vm {
+  nohup virtualbox "\$@" > /dev/null 2>&1 & disown
+}
+EOT
+EOF

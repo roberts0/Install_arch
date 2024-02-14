@@ -1,0 +1,22 @@
+#!/bin/bash
+   
+#Install web browser
+arch-chroot /mnt <<EOF
+web_browser_1=brave
+web_browser_2=tor
+pacman -Sc --noconfirm #this is run because for some reason installing Brave failed due to "no free space"
+mount -o remount,size=4G,noatime /tmp #this is run because brave installer reports "no free space" on /tmp
+useradd -m nobodyyyy
+echo '%nobodyyyy ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
+set -e
+su - nobodyyyy -c "sudo aura -A "\$web_browser_1"-bin --noconfirm"
+userdel -f nobodyyyy
+rm -rf /home/nobodyyyy
+sed -i '/nobodyyyy/d' /etc/sudoers
+aura -S "\$web_browser_2"browser-launcher --noconfirm
+echo "alias b="'"'"firejail \$web_browser_1"'"'"" >> $Bashrc
+x="\$web_browser_2"browser-launcher
+echo "alias f="'"'"firejail \$x"'"'"" >> $Bashrc
+echo 'alias ddg="echo '"'"'duckduckgo.com'"'"' | setclip"' >> $Bashrc
+echo 'alias tut="echo '"'"'https://mail.tutanota.com/login'"'"' | setclip"' >> $Bashrc
+EOF

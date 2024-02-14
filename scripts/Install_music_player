@@ -1,0 +1,19 @@
+#!/bin/bash
+   
+#Chroot
+arch-chroot /mnt <<EOF
+music_player=moc-pulse
+useradd -m nobodyyyy
+echo '%nobodyyyy ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
+su - nobodyyyy -c "sudo aura -A \$music_player --noconfirm"
+userdel -f nobodyyyy
+rm -rf /home/nobodyyyy
+sed -i '/nobodyyyy/d' /etc/sudoers
+mkdir /home/$User/.moc
+#cp /usr/share/doc/moc/config.example .moc/config
+chown -R $User:$User /home/$User/.moc
+#sed -i 's/^#\(XTermTheme =\)/\1 black_theme/' /home/$User/.moc/config #everything works without this command. Nevertheless, I will not delete it just in case
+echo "Theme = black_theme" >> /home/$User/.moc/config
+echo 'alias mo="mocp"' >> $Bashrc
+echo 'alias mox="mocp -x"' >> $Bashrc
+EOF

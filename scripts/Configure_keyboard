@@ -1,0 +1,7 @@
+#!/bin/bash
+   
+#Configure keyboard
+arch-chroot /mnt <<EOF
+sed -i '1a\setxkbmap -layout lv -variant apostrophe' /home/$User/.xinitrc
+echo 'alias lv="setxkbmap -layout lv -variant apostrophe"' >> $Bashrc
+EOF

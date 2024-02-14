@@ -1,0 +1,11 @@
+#!/bin/bash
+   
+kernel=linux-lts
+set +e
+pacstrap -K /mnt base $kernel linux-firmware sof-firmware
+if [ $? -ne 0 ]; then
+  set -e
+  pacman -Sy
+  pacman -S archlinux-keyring --noconfirm
+  pacstrap -K /mnt base $kernel linux-firmware sof-firmware
+fi

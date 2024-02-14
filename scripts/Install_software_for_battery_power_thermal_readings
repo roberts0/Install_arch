@@ -1,0 +1,8 @@
+#!/bin/bash
+   
+#Install software for battery power thermal readings
+arch-chroot /mnt <<EOF
+software_for_battery_power_thermal_readings=acpi
+aura -S \$software_for_battery_power_thermal_readings --noconfirm
+echo 'alias ac="acpi"' >> $Bashrc
+EOF

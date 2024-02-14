@@ -1,0 +1,23 @@
+#!/bin/bash
+   
+#Install a pdf reader
+arch-chroot /mnt <<EOF
+pdf_reader=zathura
+aura -Syu \$pdf_reader "\$pdf_reader"-djvu "\$pdf_reader"-pdf-mupdf "\$pdf_reader"-ps --noconfirm #zathura-pdf-poppler install this if zathura doesn't work
+mkdir -p /home/$User/.config/zathura
+cat <<EOT >> /home/$User/.config/zathura/zathurarc
+# Put this file in ~/.config/zathura directory
+set selection-clipboard clipboard
+map f scroll full-down
+map <C-f> follow links
+map b scroll full-up
+map u scroll half-up
+map d scroll half-down
+map <C-d> dual-page 
+EOT
+cat <<'EOT' >> $Bashrc
+function z {
+  nohup zathura "\$@" > /dev/null 2>&1 & disown
+}
+EOT
+EOF

@@ -1,0 +1,24 @@
+#!/bin/bash
+   
+#Install word alternative
+arch-chroot /mnt <<EOF
+word_alternative_1=libreoffice
+word_alternative_2=onlyoffice
+aura -S "\$word_alternative_1"-still --noconfirm
+#Only office unfortunately cannot be installed with aura (yay works but aura does not). Instead I will install and upgarde manually
+useradd -m nobodyyyy
+echo '%nobodyyyy ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
+su - nobodyyyy -c "git clone https://aur.archlinux.org/"\$word_alternative_2"-bin.git; cd "\$word_alternative_2"-bin; makepkg -si --noconfirm"
+chown -R \$User:\$User /home/nobodyyyy/*
+mv /home/nobodyyyy/"\$word_alternative_2"-bin /home/\$User/"\$word_alternative_2"-bin
+sed -i '/nobodyyyy/d' /etc/sudoers
+userdel -f nobodyyyy
+cat <<'EOT' >> $Bashrc
+function lo {
+  nohup libreoffice "\$@" > /dev/null 2>&1 & disown
+}
+function oo {
+  nohup onlyoffice-desktopeditors "\$@" > /dev/null 2>&1 & disown
+}
+EOT
+EOF

@@ -1,0 +1,24 @@
+#!/bin/bash
+   
+#Install AUR helper
+arch-chroot /mnt <<EOF
+aur_helper=aura
+pacman -S git base-devel --noconfirm
+useradd -m nobodyyyy
+echo '%nobodyyyy ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
+su - nobodyyyy -c "git clone https://aur.archlinux.org/\$aur_helper-bin.git; cd \$aur_helper-bin; makepkg -si --noconfirm"
+chown -R $User:$User /home/nobodyyyy/*
+mv /home/nobodyyyy/\$aur_helper-bin /home/$User/\$aur_helper-bin
+sed -i '/nobodyyyy/d' /etc/sudoers
+userdel -f nobodyyyy
+rm -rf /home/nobodyyyy || true
+echo 'alias bl="aura -Bl"' >> $Bashrc
+echo 'alias Si='"'"'aura -Ai \$1'"'"'' >> $Bashrc
+echo 'alias si='"'"'pacman -Si \$1'"'"'' >> $Bashrc
+echo 'alias rem='"'"'pacman -Rns \$1'"'"'' >> $Bashrc
+cat <<EOT >> $Bashrc
+function upg {
+  sudo aura -Syu --noconfirm && sudo aura -Au --noconfirm
+}
+EOT
+EOF

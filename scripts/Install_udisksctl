@@ -1,0 +1,15 @@
+#!/bin/bash
+   
+#Install udisksctl
+arch-chroot /mnt <<EOF
+aura -S udisks2 --noconfirm
+cat <<'EOT' >> $Bashrc
+function u {
+cd
+sudo udisksctl unmount -b \$1;
+sudo eject \$1;
+sudo udisksctl power-off -b \$1;
+echo \$?
+}
+EOT
+EOF

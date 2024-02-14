@@ -1,0 +1,15 @@
+#!/bin/bash
+   
+#Install GUI
+arch-chroot /mnt <<EOF
+  gui=xorg
+  aura -S \$gui-server \$gui-xinit --noconfirm
+  echo '[[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources' >> /home/$User/.xinitrc
+cat <<ZOF > /home/$User/.bash_profile
+[[ -f ~/.bashrc ]] && . ~/.bashrc
+
+if [[ -z \\\$DISPLAY ]] && [[ \\\$(tty) = /dev/tty1 ]]; then
+  startx
+fi
+ZOF
+EOF

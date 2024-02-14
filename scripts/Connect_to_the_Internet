@@ -1,0 +1,113 @@
+#!/bin/bash
+#Connect to the Internet
+set +e
+#Maybe Internet just works out of the box (Ethernet is used, for example). If it doesn't, connect via wifi
+ping -c 4 gnu.org &> /dev/null
+if [ $? -ne 0 ]; then
+  network_interface=$(ip link | gawk '$2 ~ /^wl/{print $2}' | sed 's/:$//')
+  if [[ $network_interface != wl* ]]; then
+    echo "Your computer doesn't have a wifi card or it is not recognised by software (which means driver problems).
+    Troubleshoot driver problems or buy RJ45 cable, with it connect your computer and your router and use Ethernet instead.
+    After connecting your computer with Ethernet cable, rerun this script!
+    Or buy a new computer"
+    exit
+  else
+    soft_blocked=$(rfkill list | grep -i -A 2 'wireless lan' | gawk '/Soft blocked/{print $3}')
+    hard_blocked=$(rfkill list | grep -i -A 2 'wireless lan' | gawk '/Hard blocked/{print $3}')
+    if [ $hard_blocked = "yes" ]; then
+      systemctl stop reflector.service
+      echo -e "\n\n\nMany laptops have a hardware button (or switch) to turn off the wireless card. Use the hardware button (switch) to unblock it!"
+      function was_wifi_unblocked_by_pressing_a_button {
+        read -p "Have you pressed the button already? Type "'"'"yes"'"'" if yes. Otherwise, type "'"'"no"'"'" to exit the script: "
+	yes=(y Y yes Yes yEs yeS YEs YeS yES YES)
+	no=(n N no No nO NO)
+	for Yes in ${yes[@]}; do
+	  if [ "$Yes" != "$REPLY" ]; then
+	    continue
+	  else
+	    button_was_pressed=true
+	    break
+	  fi
+	done
+	for NO in ${no[@]}; do
+	  if [ "$NO" != "$REPLY" ]; then
+	    continue
+	  else
+	    button_was_pressed=false
+	    break
+	  fi
+	done
+      }
+      function button_was_or_wasnt_pressed {
+        was_wifi_unblocked_by_pressing_a_button
+	while [ "$button_was_pressed" = "" ]; do
+          echo "Answer must be yes or no"
+	  was_wifi_unblocked_by_pressing_a_button
+	done
+	if [ "$button_was_pressed" = "false" ]; then
+	  echo -e "\n\n\nYou decided to exit the script due to the problems of not being able to locate the wifi blocking hardware button. You can use Ethernet instead (by connecting your laptop with the router via RJ45 cable), ask for hardware expert or buy a new laptop"
+	  exit
+	fi
+      }
+      #Checking if user indeed pressed the button
+      button_was_or_wasnt_pressed
+      hard_blocked=$(rfkill list | grep -i -A 2 'wireless lan' | gawk '/Hard blocked/{print $3}')
+      while [ $hard_blocked = "yes" ]; do
+        echo "In fact you didn't press this button (maybe it's the wrong button. Try another one)"
+	unset button_was_pressed
+	button_was_or_wasnt_pressed
+	hard_blocked=$(rfkill list | grep -i -A 2 'wireless lan'| gawk '/Hard blocked/{print $3}')
+      done
+    elif [ $soft_blocked = "yes" ]; then
+      rfkill unblock wifi
+    fi
+    ip link set $network_interface up
+    device=$(iwctl device list | grep '.*wl' | sed 's/.*wl/wl/' | gawk '{print $1}')
+    iwctl station $device scan
+    iwctl station $device get-networks
+    read -p "What is the name of your router: " ssid
+    iwctl station $device connect "$ssid" | tee /tmp/iwctl_errors.txt
+    grep 'Invalid network name' /tmp/iwctl_errors.txt &> /dev/null
+    while [ $? -eq 0 ]; do
+      echo -e "\n\n\n"
+      cat /tmp/iwctl_errors.txt
+      iwctl station $device get-networks
+      read -p "What is the name of your router: " ssid
+      iwctl station $device connect "$ssid" | tee /tmp/iwctl_errors.txt
+      grep 'Invalid network name' /tmp/iwctl_errors.txt &> /dev/null
+    done
+    grep -E 'Operation failed|Argument format is invalid' /tmp/iwctl_errors.txt &> /dev/null #This error is thrown if incorrect password is entered
+    while [ $? -eq 0 ]; do
+      echo -e "\n\n\nYou entered incorrect password. Try again!"
+      iwctl station $device connect "$ssid" | tee /tmp/iwctl_errors.txt
+      grep 'Operation failed' /tmp/iwctl_errors.txt &> /dev/null
+    done
+    sleep 5
+    ping -c 4 gnu.org > /dev/null
+    #trying wpa_supplicant if iwctl failed to connect
+    if [ $? -ne 0 ]; then
+      read -sp "Sorry for the inconvenience, but could you please enter the password again (this is an attempt to fix a bug): "; echo ""
+      read -sp "Retype this password: " reply; echo ""
+      while [ "$REPLY" != "$reply" ]; do
+        read -sp "Passwords do not match. How can you be sure that the password is correct if you can't even type it twice? Anyway. Try again! Enter the password again: "; echo""
+        read -sp "Retype this password: " reply; echo ""
+      done
+      temporary_password_file=/tmp/passphrase.txt
+      echo "$REPLY" > $temporary_password_file
+      unset "$REPLY" "$reply"
+      wpa_supplicant -B -i $network_interface -c <(wpa_passphrase "$ssid" < $temporary_password_file)
+      rm $temporary_password_file
+      systemctl start dhcpcd.service
+      sleep 10
+      ping -c 5 gnu.org &> /dev/null
+      if [ $? -ne 0 ]; then
+        ping -c 5 8.8.8.8 &> /dev/null
+       if [ $? -ne 0 ]; then
+         echo "Failed to connect to Internet. There is a bug in this script. Debug this script yourself or give up"
+         exit
+       fi
+      fi
+    fi
+  fi
+fi
+set -e

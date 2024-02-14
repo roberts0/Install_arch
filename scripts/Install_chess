@@ -1,0 +1,12 @@
+#!/bin/bash
+   
+#Chroot
+arch-chroot /mnt <<EOF
+useradd -m nobodyyyy
+echo '%nobodyyyy ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
+su - nobodyyyy -c "sudo aura -A scid stockfish --noconfirm"
+userdel -f nobodyyyy
+rm -rf /home/nobodyyyy
+sed -i '/nobodyyyy/d' /etc/sudoers
+echo 'alias sah="vi ~/Desktop/saha_atklatnes.txt"' >> $Bashrc
+EOF

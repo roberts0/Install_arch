@@ -1,0 +1,7 @@
+#!/bin/bash
+   
+#Installing sanboxing software
+arch-chroot /mnt <<EOF
+sandbox=firejail
+aura -S \$sandbox --noconfirm
+EOF

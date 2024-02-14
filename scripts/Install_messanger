@@ -1,0 +1,12 @@
+#!/bin/bash
+   
+#Install messanger
+arch-chroot /mnt <<EOF
+messanger=signal-desktop
+aura -S \$messanger --noconfirm
+cat <<'EOT' >> $Bashrc
+function syg {
+  nohup signal-desktop "\$@" > /dev/null 2>&1 & disown
+}
+EOT
+EOF

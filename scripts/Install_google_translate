@@ -1,0 +1,7 @@
+#!/bin/bash
+   
+#Install google translate
+arch-chroot /mnt <<EOF
+aura -S translate-shell --noconfirm
+echo 'alias t="trans :lv"' >> $Bashrc
+EOF

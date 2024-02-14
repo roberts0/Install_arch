@@ -1,0 +1,7 @@
+#!/bin/bash
+   
+#Install video and audio format converter
+arch-chroot /mnt <<EOF
+video_and_audio_format_converter=ffmpeg
+aura -S \$video_and_audio_format_converter --noconfirm
+EOF

@@ -1,0 +1,16 @@
+#!/bin/bash
+   
+#Install screenshotting tool
+arch-chroot /mnt <<EOF
+screenshot_program=imagemagick
+aura -S \$screenshot_program --noconfirm
+mkdir -p /home/$User/Pictures/Screenshots
+echo 'alias scre="cd ~/Pictures/Screenshots"' >> $Bashrc
+#Make ratpoison execute this program when Print has been pressed on the keyboard
+cat <<'EOT' >> /home/$User/.ratpoisonrc
+
+# Make a screenshot
+alias sshot exec import -window root ~/Pictures/Screenshots/s-\$(date +%Y-%m-%d-%H-%M-%S-%N).jpg
+definekey top Print sshot
+EOT
+EOF

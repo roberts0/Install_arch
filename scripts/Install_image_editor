@@ -1,0 +1,13 @@
+#!/bin/bash
+   
+#Install image editor
+arch-chroot /mnt <<EOF
+image_editor_1=ksnip
+image_editor_2=inkscape 
+aura -S \$image_editor_1 \$image_editor_2 --noconfirm
+cat <<'EOT' >> $Bashrc
+function inkscape {
+  nohup inkscape "\$@" > /dev/null 2>&1 & disown
+}
+EOT
+EOF
