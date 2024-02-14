@@ -1,7 +1,5 @@
 #!/bin/bash
    
-#Chroot
-set +e
 arch-chroot /mnt <<EOF
 which which &> /dev/null
 if [ \$? -ne 0 ]; then

@@ -1,8 +1,8 @@
 #!/bin/bash
-#Output and error has to be printed on the screen as well as stored in a file /tmp/output after user runs ./install_arch.sh
+#Output and error has to be printed on the screen as well as stored in a file /tmp/output after user runs ./install_arch.sh  Providing that...
 exec > >(tee /tmp/paula) 2>&1
 
-#Make sure the directory is right
+#Making sure the directory is right...
 working_directory=$(echo ${0%/*})
 cd $working_directory
 cd scripts
@@ -60,7 +60,7 @@ cd scripts
 . ./Install_udisksctl
 arch-chroot /mnt chown -R $User:$User /home/$User #just in case root owns some file which is something I don't want
 
-#At this point unfortunately home partition is empty. /home/$User has been written under / partition and not /home partition. Fixing that:
+#At this point unfortunately home partition is empty. /home/$User has been written under / partition and not /home partition. Fixing that...
 mkdir /mnt/media
 arch-chroot /mnt umount  "$DISK"4
 arch-chroot /mnt mount  "$DISK"4 /media
@@ -69,6 +69,6 @@ arch-chroot /mnt rm -rf /home #there are some leftovers there, that's why run th
 mkdir /mnt/home
 arch-chroot /mnt umount "$DISK"4
 
-##Unmount everything and reboot
+##Unmounting everything and rebooting...
 #umount -R /mnt
 #reboot

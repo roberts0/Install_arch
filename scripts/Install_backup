@@ -1,6 +1,5 @@
 #!/bin/bash
    
-#Chroot
 arch-chroot /mnt <<EOF
 backup_software=duplicity
 aura -S rsync \$backup_software --noconfirm

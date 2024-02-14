@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install setclip
+#Installing setclip...
 arch-chroot /mnt <<EOF
 aura -S xclip --noconfirm
 echo 'alias setclip="xclip -selection c"' >> $Bashrc

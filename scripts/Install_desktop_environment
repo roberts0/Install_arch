@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install desktop environment
+#Installing desktop environment...
 arch-chroot /mnt <<EOF
 desktop_environment=none #window manager is used instead
 EOF

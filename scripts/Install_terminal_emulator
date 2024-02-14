@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install terminal emulator
+#Installing terminal emulator...
 arch-chroot /mnt <<EOF
 terminal_emulator=xterm
 aura -S \$terminal_emulator --noconfirm

@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install image editor
+#Installing image editor...
 arch-chroot /mnt <<EOF
 image_editor_1=ksnip
 image_editor_2=inkscape 

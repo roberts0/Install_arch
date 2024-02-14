@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Create a non-root user
+#Creating a non-root user...
 User=roberts
 Bashrc=/home/$User/.bashrc
 arch-chroot /mnt bash -c '

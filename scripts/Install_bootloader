@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install bootloader
+#Installing bootloader...
 arch-chroot /mnt <<EOF
 bootloader=grub
 aura -S \$bootloader --noconfirm

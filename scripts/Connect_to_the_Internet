@@ -1,5 +1,5 @@
 #!/bin/bash
-#Connect to the Internet
+#Connecting to the Internet...
 set +e
 #Maybe Internet just works out of the box (Ethernet is used, for example). If it doesn't, connect via wifi
 ping -c 4 gnu.org &> /dev/null

@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install programming languages
+#Installing programming languages
 arch-chroot /mnt <<EOF
 programming_language_1=python
 #aura -S \$programming_language_1 python-pip --noconfirm

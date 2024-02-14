@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Check if I have an UEFI system
+#Checking if I have an UEFI system...
 ls /sys/firmware/efi/efivars &> /dev/null
 if [ $? -eq 0 ]; then
   firmware=uefi

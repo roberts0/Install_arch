@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install network manager
+#Installing network manager...
 arch-chroot /mnt <<EOF
 network_manager=networkmanager
 aura -S \$network_manager --noconfirm

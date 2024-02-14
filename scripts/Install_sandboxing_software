@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Installing sanboxing software
+#Installing sanboxing software...
 arch-chroot /mnt <<EOF
 sandbox=firejail
 aura -S \$sandbox --noconfirm

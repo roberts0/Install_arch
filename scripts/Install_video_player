@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install music player
+#Installing music player...
 arch-chroot /mnt <<EOF
 video_player=vlc
 aura -S \$video_player --noconfirm

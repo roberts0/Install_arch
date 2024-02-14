@@ -1,15 +1,10 @@
 #!/bin/bash
    
-#Install spaced repetition software
+#Installing spaced repetition software...
 Bashrc=/home/roberts/.bashrc
 arch-chroot /mnt <<EOF
 spaced_repetition_software=anki-bin
-useradd -m nobodyyyy
-echo '%nobodyyyy ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
-su - nobodyyyy -c "sudo aura -A \$spaced_repetition_software --noconfirm"
-userdel -f nobodyyyy
-rm -rf /home/nobodyyyy
-sed -i '/nobodyyyy/d' /etc/sudoers
+install_aur_program \$spaced_repetition_software
 cat <<EOT >> $Bashrc
 function anki {
 nohup \$spaced_repetition_software "\\\$@" > /dev/null 2>&1 & disown

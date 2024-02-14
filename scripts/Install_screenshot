@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install screenshotting tool
+#Installing screenshotting tool...
 arch-chroot /mnt <<EOF
 screenshot_program=imagemagick
 aura -S \$screenshot_program --noconfirm

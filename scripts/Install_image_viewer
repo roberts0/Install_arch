@@ -1,11 +1,29 @@
 #!/bin/bash
    
-#Install image viewer
+#Installing image viewer...
 arch-chroot /mnt <<EOF
 image_viewer=sxiv
 aura -S \$image_viewer --noconfirm
 mkdir -p /home/$User/.config/sxiv/exec
 touch /home/$User/.config/sxiv/exec/key-handler
+cat <<ZOF > /home/$User/.config/sxiv/exec/key-handler
+#!/bin/bash
+while read file; do
+  fullpath="\\\$(pwd)/\\\$file"
+  case "\\\$1" in
+  "r")
+         convert -rotate 90 "\\\$file" "\\\$file" ;;
+  "R")
+         convert -rotate -90 "\\\$file" "\\\$file" ;;
+  "m")
+         mv "\\\$file" /home/roberts/Pictures/screenshotiSkiroti_2/quick_learners ;;
+  "d")
+         rm "\\\$file" ;;
+  "y")
+         echo "\\\$file" | xclip -selection c
+  esac
+done
+ZOF
 chmod 700 /home/$User/.config/sxiv/exec/key-handler
 echo 'alias sxy="sx -t ~/Pictures/Screenshots/*.jpg"' >> $Bashrc
 cat <<'EOT' >> $Bashrc

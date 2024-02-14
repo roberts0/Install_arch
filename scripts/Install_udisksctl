@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install udisksctl
+#Installing udisksctl...
 arch-chroot /mnt <<EOF
 aura -S udisks2 --noconfirm
 cat <<'EOT' >> $Bashrc

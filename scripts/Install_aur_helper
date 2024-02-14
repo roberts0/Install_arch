@@ -1,17 +1,25 @@
 #!/bin/bash
    
-#Install AUR helper
+#It's impossible to run makepkg -si as root. Providing workaround...
+function install_aur_program {
+  useradd -m nobodyyyy
+  echo '%nobodyyyy ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
+  su - nobodyyyy -c "git clone https://aur.archlinux.org/\$1.git; cd \$1; makepkg -si --noconfirm; echo $? > /tmp/was_program_installed"
+  x=$(cat /tmp/was_program_installed)
+  if [ $x -ne 0 ]; then
+    su - nobodyyyy -c "cd \$1; makepkg -si --skippgpcheck --noconfirm"
+  fi
+  sed -i '/nobodyyyy/d' /etc/sudoers
+  userdel -f nobodyyyy
+  rm -rf /home/nobodyyyy || true
+}
+export -f install_aur_program
+
+#Installing AUR helper...
 arch-chroot /mnt <<EOF
 aur_helper=aura
 pacman -S git base-devel --noconfirm
-useradd -m nobodyyyy
-echo '%nobodyyyy ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
-su - nobodyyyy -c "git clone https://aur.archlinux.org/\$aur_helper-bin.git; cd \$aur_helper-bin; makepkg -si --noconfirm"
-chown -R $User:$User /home/nobodyyyy/*
-mv /home/nobodyyyy/\$aur_helper-bin /home/$User/\$aur_helper-bin
-sed -i '/nobodyyyy/d' /etc/sudoers
-userdel -f nobodyyyy
-rm -rf /home/nobodyyyy || true
+install_aur_program \$aur_helper-bin
 echo 'alias bl="aura -Bl"' >> $Bashrc
 echo 'alias Si='"'"'aura -Ai \$1'"'"'' >> $Bashrc
 echo 'alias si='"'"'pacman -Si \$1'"'"'' >> $Bashrc

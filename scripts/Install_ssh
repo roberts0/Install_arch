@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install SSH
+#Installing SSH client...
 arch-chroot /mnt <<EOF
 aura -S openssh --noconfirm
 cd /home/$User

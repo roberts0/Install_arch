@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install a pdf reader
+#Installing a pdf reader...
 arch-chroot /mnt <<EOF
 pdf_reader=zathura
 aura -Syu \$pdf_reader "\$pdf_reader"-djvu "\$pdf_reader"-pdf-mupdf "\$pdf_reader"-ps --noconfirm #zathura-pdf-poppler install this if zathura doesn't work

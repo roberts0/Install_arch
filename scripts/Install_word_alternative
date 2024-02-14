@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install word alternative
+#Installing word alternative...
 arch-chroot /mnt <<EOF
 word_alternative_1=libreoffice
 word_alternative_2=onlyoffice

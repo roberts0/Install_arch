@@ -1,6 +1,5 @@
 #!/bin/bash
    
-#Chroot
 arch-chroot /mnt <<EOF
 text_editor=vim
 aura -S \$text_editor --noconfirm

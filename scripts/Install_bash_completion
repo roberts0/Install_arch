@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install Bash completion
+#Installing Bash completion...
 arch-chroot /mnt <<EOF
 aura -S bash-completion --noconfirm
 EOF

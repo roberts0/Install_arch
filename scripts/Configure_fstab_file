@@ -1,8 +1,8 @@
 #!/bin/bash
    
-#Configure fstab file
 #genfstab -U /mnt >> /mnt/etc/fstab #will not be used here. Why? Because for some reason, it does not detect /dev/sda4 and not mount it to /mnt/home
 #Manually creating is reliable, genfstab is not
+#Configuring fstab file...
 if [ $firmware = "bios" ]; then
   ext4_or_fat=ext4
   fouth_column=rw,relatime

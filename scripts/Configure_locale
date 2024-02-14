@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Configure locale
+#Configuring locale...
 arch-chroot /mnt <<EOF
 sed -i 's/^#\(lv_LV\)/\1/' /etc/locale.gen
 locale-gen

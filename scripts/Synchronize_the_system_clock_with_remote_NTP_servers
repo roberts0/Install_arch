@@ -1,4 +1,4 @@
 #!/bin/bash
 
-#Synchronize the system clock with remote NTP servers
+#Synchronizing the system clock with remote NTP servers...
 timedatectl set-ntp true

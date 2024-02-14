@@ -3,12 +3,7 @@
 #Install sound
 arch-chroot /mnt <<EOF
 aura -S alsa-utils pulseaudio pavucontrol --noconfirm
-useradd -m nobodyyyy
-echo '%nobodyyyy ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
-su - nobodyyyy -c "sudo aura -A apulse --noconfirm"
-userdel -f nobodyyyy
-rm -rf /home/nobodyyyy
-sed -i '/nobodyyyy/d' /etc/sudoers
+install_aur_program apulse
 usermod -aG audio $User
 amixer set Speaker unmute
 amixer set Master unmute

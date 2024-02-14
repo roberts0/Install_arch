@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install hypervisor
+#Installing hypervisor...
 arch-chroot /mnt <<EOF
 hypervisor=virtualbox
 aura -S \$hypervisor --noconfirm

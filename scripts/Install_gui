@@ -1,6 +1,6 @@
 #!/bin/bash
    
-#Install GUI
+#Installing GUI...
 arch-chroot /mnt <<EOF
   gui=xorg
   aura -S \$gui-server \$gui-xinit --noconfirm
