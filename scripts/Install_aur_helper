@@ -4,10 +4,10 @@
 function install_aur_program {
   useradd -m nobodyyyy
   echo '%nobodyyyy ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
-  su - nobodyyyy -c "git clone https://aur.archlinux.org/\$1.git; cd \$1; makepkg -si --noconfirm; echo $? > /tmp/was_program_installed"
+  su - nobodyyyy -c "git clone https://aur.archlinux.org/$1.git; cd $1; makepkg -si --noconfirm; echo $? > /tmp/was_program_installed"
   x=$(cat /tmp/was_program_installed)
   if [ $x -ne 0 ]; then
-    su - nobodyyyy -c "cd \$1; makepkg -si --skippgpcheck --noconfirm"
+    su - nobodyyyy -c "cd $1; makepkg -si --skippgpcheck --noconfirm"
   fi
   sed -i '/nobodyyyy/d' /etc/sudoers
   userdel -f nobodyyyy
