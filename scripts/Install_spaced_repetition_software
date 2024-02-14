@@ -1,7 +1,6 @@
 #!/bin/bash
    
 #Installing spaced repetition software...
-Bashrc=/home/roberts/.bashrc
 arch-chroot /mnt <<EOF
 spaced_repetition_software=anki-bin
 install_aur_program \$spaced_repetition_software

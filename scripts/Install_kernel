@@ -7,4 +7,5 @@ if [ $? -ne 0 ]; then
   pacman -Sy
   pacman -S archlinux-keyring --noconfirm
   pacstrap -K /mnt base $kernel linux-firmware sof-firmware
+  set +e
 fi

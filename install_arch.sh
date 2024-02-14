@@ -69,6 +69,10 @@ arch-chroot /mnt rm -rf /home #there are some leftovers there, that's why run th
 mkdir /mnt/home
 arch-chroot /mnt umount "$DISK"4
 
+#Test if all the programs were installed
+cp Test_what_was_installed /mnt
+#Run arch-chroot /mnt ./Test_what_was_installed | less
+
 ##Unmounting everything and rebooting...
 #umount -R /mnt
 #reboot
