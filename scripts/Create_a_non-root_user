@@ -25,6 +25,10 @@ function In {
   sudo aura -A \\\$* --noconfirm
 }
 export LC_ALL=C
+export PATH="$HOME/bin:$HOME/bin/python_scripts:$PATH"
+alias ls='ls --color=always'
+HISTSIZE=10000
+HISTFILESIZE=10000
 function l {
   if [ -z \\\$1 ]; then
     ls | nl

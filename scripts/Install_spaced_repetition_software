@@ -6,7 +6,7 @@ spaced_repetition_software=anki-bin
 install_aur_program \$spaced_repetition_software
 cat <<EOT >> $Bashrc
 function anki {
-nohup \$spaced_repetition_software "\\\$@" > /dev/null 2>&1 & disown
+nohup \${spaced_repetition_software%-bin} "\\\$@" > /dev/null 2>&1 & disown
 }
 EOT
 EOF
