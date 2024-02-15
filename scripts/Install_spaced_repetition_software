@@ -3,6 +3,7 @@
 #Installing spaced repetition software...
 arch-chroot /mnt <<EOF
 spaced_repetition_software=anki-bin
+pacman -S mpv --noconfirm
 install_aur_program \$spaced_repetition_software
 cat <<EOT >> $Bashrc
 function anki {
