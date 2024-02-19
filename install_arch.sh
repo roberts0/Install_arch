@@ -1,6 +1,6 @@
 #!/bin/bash
 #Output and error has to be printed on the screen as well as stored in a file /tmp/output after user runs ./install_arch.sh  Providing that...
-exec > >(tee /tmp/whole_output_error) 2>&1
+exec > >(tee /tmp/output) 2>&1
 
 #Making sure the directory is right...
 working_directory=$(echo ${0%/*})
