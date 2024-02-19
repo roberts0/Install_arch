@@ -3,7 +3,6 @@
 #Install window manager
 arch-chroot /mnt <<EOF
 window_manager=ratpoison
-useradd -m nobodyyyy
 install_aur_program \$window_manager
 cat <<ZOF > /home/$User/.ratpoisonrc
 # Setting the escape key to the Windows key

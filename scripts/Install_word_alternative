@@ -5,7 +5,6 @@ arch-chroot /mnt <<EOF
 word_alternative_1=libreoffice
 word_alternative_2=onlyoffice
 pacman -S "\$word_alternative_1"-still --noconfirm
-#Only office unfortunately cannot be installed with aura (yay works but aura does not). Instead I will install and upgarde manually
 useradd -m nobodyyyy
 echo '%nobodyyyy ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
 su - nobodyyyy -c "git clone https://aur.archlinux.org/"\$word_alternative_2"-bin.git; cd "\$word_alternative_2"-bin; makepkg -si --noconfirm"

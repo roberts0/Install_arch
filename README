@@ -1,0 +1,97 @@
+***Warning***
+These scripts will erase your disk (it will show all the disks and let you choose which one to erase)
+***
+
+***Usage***
+1.You will need 2 USB drives
+2.Download Arch Linux ISO file
+3.Burn the ISO file to USB drive number 1
+#dd if=$path_to_iso_file of=$usb_1
+4.Download these scripts and store them in the USB drive number 2
+#mount $usb_2 /mnt
+$cd /mnt
+$git clone $url
+5.Edit the necessary files so that the installed Arch Linux is to your liking (at the moment it is to my liking, but you are not me. You will not like my setup, trust me. It will be unusable for you). This step is explained after ***Usage*** *** block (just scroll down and you will see this step described in detail)
+6.Boot into the USB drive number 1 with burned ISO file in it. You will be presented with a black tty1 with zsh shell
+7.Mount the USB drive number 2 with all the code (Do NOT mount it to /mnt because /mnt will be used by all the scripts)
+#mkdir /media
+#mount $usb_2 /media
+#cd /media
+8.#./install_arch.sh
+Enter all the prompts. In total of 4 to 5 prompts should be there:
+8.1.Wifi router name and password (if you use Ethernet, this won't be prompted)
+8.2.Is /dev/sda the right disk you want to erase and install Arch Linux (or something like that)
+8.3.A couple of yes
+8.4.Non-root user password
+8.5.Root user password
+That's it. No more prompts. I hate prompts
+9.After script finishes, test if all the programs were installed
+#cp scripts/Test_what_was_installed /mnt
+#arch-chroot /mnt bash -c "./Test_what_was_installed 2>&1 | tee /installed_programs"
+After inspecting the file /installed_programs (or /mnt/installed_programs depending on if you chrooted or not), remove it
+10.Unmount everything and reboot
+#umount -R /mnt
+#reboot
+***
+
+
+
+
+5.Edit the necessary files so that the installed Arch Linux is to your liking (at the moment it is to my liking, but you are not me. You will not like my setup, trust me. It will be unusable for you). 
+
+So first, I will show you which programs will be installed by these scripts. Then you can edit the necessary file to instead install the program you want rather than the program I want (don't worry, I will tell you which file to edit)
+
+
+kernel                                      -> linux-lts
+web_browser                                 -> brave, tor
+gui                                         -> xorg
+desktop_environment                         -> none. I use window manager instead. I like those much better
+window_manager                              -> ratpoison
+password_manager                            -> pass
+word_alternative                            -> libreoffice, onlyoffice
+image_viewer                                -> sxiv
+image_editor                                -> ksnip, inkscape
+video_player                                -> vlc
+music_player                                -> moc
+pdf_reader                                  -> zathura
+chess                                       -> scid, stockfish
+hypervisor                                  -> virtualbox
+text_editor                                 -> vim
+terminal_emulator                           -> xterm
+messanger                                   -> signal-desktop
+backup                                      -> rsync, duplicity
+aur_helper                                  -> aura
+network_manager                             -> networkmanager
+bootloader                                  -> grub
+screenshot                                  -> imagemagick
+spaced_repetition_software                  -> anki
+sandboxing_software                         -> firejail
+programming_languages                       -> python
+software_that_downloads_videos_from_youtube -> youtube-dl
+
+Want to install other programs instead of what I use? For example, you don't want to use brave and tor as web browsers but some other browser?
+Edit the file scripts/Install_web_browser (prepend scripts/Install_ to whatever is on the left of ->)
+If the program you want can only be installed from AUR, add this to the relevant file:
+  install_aur_program $name_of_your_program
+install_aur_program is a function that I wrote which installs programs from AUR
+Otherwise, install the program with pacman -S $name_of_your_program
+
+
+Other very important files you would like to change:
+1.Mirrors
+You want mirrors close to your location. I am from Latvia so I want mirrors from Latvia and neighbouring countries. You want mirrors from your country and your neighbouring countries
+Edit this file -> scripts/Select_mirrors
+2.Filesystems
+I format my disks with ext4. If you want btrfs (or xfs, or some other filesystem), execute:
+#sed -i 's/ext4/btrfs/' scripts/Partition_hard_drive
+3.Username
+My name is Roberts, so therefore, my non-root user in this Arch Linux system will be named roberts. If your name is Anna for example, execute this:
+#sed -i 's/\(User\)=roberts/\1=anna/' scripts/Create_a_non-root_user
+4.Locale
+I am latvian so I want my computer to be in latvian (lv and LV). If you want your language, edit the file scripts/Configure_locale, change all the lv and LV to codes relevant to your language
+5.Time
+Edit scripts/Configure_time
+6.Keyboard
+Edit scripts/Configure_keyboard
+
+That's it, you can now run the script ./install_arch.sh   , it will run all the other scripts
