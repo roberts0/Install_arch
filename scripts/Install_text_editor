@@ -2,7 +2,7 @@
    
 arch-chroot /mnt <<EOF
 text_editor=vim
-aura -S \$text_editor --noconfirm
+pacman -S \$text_editor --noconfirm
 cat <<'EOT' > /home/$User/.vimrc
 "I want numbers to appear before each line of text
 set nu!

@@ -3,7 +3,7 @@
 #Installing network manager...
 arch-chroot /mnt <<EOF
 network_manager=networkmanager
-aura -S \$network_manager --noconfirm
+pacman -S \$network_manager --noconfirm
 systemctl enable NetworkManager
 echo 'alias il="nmcli device wifi list"' >> $Bashrc
 cat <<'EOT' >> $Bashrc

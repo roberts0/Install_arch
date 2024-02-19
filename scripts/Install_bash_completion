@@ -2,5 +2,5 @@
    
 #Installing Bash completion...
 arch-chroot /mnt <<EOF
-aura -S bash-completion --noconfirm
+pacman -S bash-completion --noconfirm
 EOF

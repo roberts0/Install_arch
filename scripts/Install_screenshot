@@ -3,7 +3,7 @@
 #Installing screenshotting tool...
 arch-chroot /mnt <<EOF
 screenshot_program=imagemagick
-aura -S \$screenshot_program --noconfirm
+pacman -S \$screenshot_program --noconfirm
 mkdir -p /home/$User/Pictures/Screenshots
 echo 'alias scre="cd ~/Pictures/Screenshots"' >> $Bashrc
 #Make ratpoison execute this program when Print has been pressed on the keyboard

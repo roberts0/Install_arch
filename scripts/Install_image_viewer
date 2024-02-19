@@ -3,7 +3,7 @@
 #Installing image viewer...
 arch-chroot /mnt <<EOF
 image_viewer=sxiv
-aura -S \$image_viewer --noconfirm
+pacman -S \$image_viewer --noconfirm
 mkdir -p /home/$User/.config/sxiv/exec
 touch /home/$User/.config/sxiv/exec/key-handler
 cat <<ZOF > /home/$User/.config/sxiv/exec/key-handler

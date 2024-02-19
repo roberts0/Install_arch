@@ -7,7 +7,7 @@ web_browser_2=tor
 pacman -Sc --noconfirm #this is run because for some reason installing Brave failed due to "no free space"
 mount -o remount,size=4G,noatime /tmp #this is run because brave installer reports "no free space" on /tmp
 install_aur_program "\$web_browser_1"-bin
-aura -S "\$web_browser_2"browser-launcher --noconfirm
+pacman -S "\$web_browser_2"browser-launcher --noconfirm
 echo "alias b="'"'"firejail \$web_browser_1"'"'"" >> $Bashrc
 x="\$web_browser_2"browser-launcher
 echo "alias f="'"'"firejail \$x"'"'"" >> $Bashrc

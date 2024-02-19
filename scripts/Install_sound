@@ -2,7 +2,7 @@
    
 #Install sound
 arch-chroot /mnt <<EOF
-aura -S alsa-utils pulseaudio pavucontrol --noconfirm
+pacman -S alsa-utils pulseaudio pavucontrol --noconfirm
 install_aur_program apulse
 usermod -aG audio $User
 amixer set Speaker unmute

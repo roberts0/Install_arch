@@ -3,7 +3,7 @@
 #Installing music player...
 arch-chroot /mnt <<EOF
 video_player=vlc
-aura -S \$video_player --noconfirm
+pacman -S \$video_player --noconfirm
 cat <<'EOT' >> $Bashrc
 function vlc {
  nohup vlc "\$@" > /dev/null 2>&1 & disown

@@ -3,7 +3,7 @@
 #Installing programming languages
 arch-chroot /mnt <<EOF
 programming_language_1=python
-aura -S \$programming_language_1 python-pip --noconfirm
+pacman -S \$programming_language_1 python-pip --noconfirm
 echo \$PATH | grep \\\$HOME/bin &> /dev/null
 if [ \$? -ne 0 ]; then
   echo "PATH="'"'"\\\$HOME/bin:\\\$HOME/bin/python_scripts:\\\$PATH"'"'"" >> $Bashrc

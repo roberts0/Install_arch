@@ -3,5 +3,5 @@
 #Installing sanboxing software...
 arch-chroot /mnt <<EOF
 sandbox=firejail
-aura -S \$sandbox --noconfirm
+pacman -S \$sandbox --noconfirm
 EOF

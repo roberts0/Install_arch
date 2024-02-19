@@ -2,6 +2,6 @@
    
 #Installing notify-send...
 arch-chroot /mnt <<EOF
-aura -S libnotify notification-daemon --noconfirm
+pacman -S libnotify notification-daemon --noconfirm
 sed -i '\$i\/usr/lib/notification-daemon-1.0/notification-daemon &' /home/$User/.xinitrc
 EOF

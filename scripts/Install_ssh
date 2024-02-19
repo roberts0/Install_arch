@@ -2,7 +2,7 @@
    
 #Installing SSH client...
 arch-chroot /mnt <<EOF
-aura -S openssh --noconfirm
+pacman -S openssh --noconfirm
 cd /home/$User
 git clone https://github.com/ccontavalli/ssh-ident.git
 cd ssh-ident

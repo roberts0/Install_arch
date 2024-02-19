@@ -2,7 +2,7 @@
    
 #Installing udisksctl...
 arch-chroot /mnt <<EOF
-aura -S udisks2 --noconfirm
+pacman -S udisks2 --noconfirm
 cat <<'EOT' >> $Bashrc
 function u {
 cd

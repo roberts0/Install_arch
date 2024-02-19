@@ -3,7 +3,7 @@
 #Installing terminal emulator...
 arch-chroot /mnt <<EOF
 terminal_emulator=xterm
-aura -S \$terminal_emulator --noconfirm
+pacman -S \$terminal_emulator --noconfirm
 cat <<EOZ > /home/$User/.Xresources
 XTerm.termName: xterm-256color
 XTerm.vt100.locale: false

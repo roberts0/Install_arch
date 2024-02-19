@@ -2,7 +2,7 @@
    
 arch-chroot /mnt <<EOF
 backup_software=duplicity
-aura -S rsync \$backup_software --noconfirm
+pacman -S rsync \$backup_software --noconfirm
 #To use this program either create a new GPG key pair or use an already created GPG key pair in the past
 #Use an external hard drive. If it's a new drive, then simply create a new GPG key pair and use this drive. If it's a drive with a backup already there, then copy GPG keys for that backup to this operating system to recover from that backup
 EOF

@@ -2,7 +2,7 @@
    
 #Installing setclip...
 arch-chroot /mnt <<EOF
-aura -S xclip --noconfirm
+pacman -S xclip --noconfirm
 echo 'alias setclip="xclip -selection c"' >> $Bashrc
 cat <<'EOT'>> $Bashrc
 function c {
