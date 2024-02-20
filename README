@@ -12,7 +12,7 @@ These scripts will erase your disk (it will show all the disks and let you choos
 4.Download these scripts and store them in the USB drive number 2
 #mount $usb_2 /mnt
 $cd /mnt
-$git clone $url
+$git clone https://github.com/roberts0/Install_arch.git
 5.Edit the necessary files so that the installed Arch Linux is to your liking (at the moment it is to my liking, but you are not me. You will not like my setup, trust me. It will be unusable for you). This step is explained after ***Usage*** *** block (just scroll down and you will see this step described in detail)
 6.Boot into the USB drive number 1 with burned ISO file in it. You will be presented with a black tty1 with zsh shell
 7.Mount the USB drive number 2 with all the code (Do NOT mount it to /mnt because /mnt will be used by all the scripts)
